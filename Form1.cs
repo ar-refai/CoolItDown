@@ -6,5 +6,10 @@ namespace CoolItDown
         {
             InitializeComponent();
         }
+
+        private void HeaderPanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }
