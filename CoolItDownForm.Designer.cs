@@ -87,6 +87,7 @@
             restartButton.TabIndex = 0;
             restartButton.Text = "Restart";
             restartButton.UseVisualStyleBackColor = false;
+            restartButton.Click += restartButton_Click;
             // 
             // GamePanel
             // 
@@ -112,6 +113,7 @@
             Name = "CoolItDownForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Cool It Down";
+            Load += CoolItDownForm_Load;
             HeaderPanel.ResumeLayout(false);
             HeaderPanel.PerformLayout();
             FooterPanel.ResumeLayout(false);
