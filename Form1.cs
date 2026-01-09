@@ -1,8 +1,8 @@
 namespace CoolItDown
 {
-    public partial class Form1 : Form
+    public partial class CoolItDownForm : Form
     {
-        public Form1()
+        public CoolItDownForm()
         {
             InitializeComponent();
         }
