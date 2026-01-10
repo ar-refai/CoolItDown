@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -103,7 +103,6 @@ namespace CoolItDown
 
             if (clickedFace == correctFace)
             {
-                PlayCorrectSound();
                 HandleWin(clickedFace);
             }
             else
@@ -113,16 +112,23 @@ namespace CoolItDown
                 var currentDistance = DistanceBetweenCenters(clickedFace, correctFace);
                 string hint = ComputeHint(currentDistance);
                 previousDistance = currentDistance;
-                _ = ShowBubbleAsync(clickedFace, hint);
+                //_ = ShowBubbleAsync(clickedFace, hint);
                 _ = HandleWrongGuessAsync(clickedFace);
             }
         }
 
-        private void HandleWin(PictureBox face)
+        private async Task HandleWin(PictureBox face)
         {
             currentState = GameState.Won;
             face.Image = Properties.Resources.happy;
-            MessageBox.Show("You found the correct face! You win!", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            PlayCorrectSound();
+
+            using (ToolTip tip = new())
+            {
+                tip.Show("أمك حلوة ورقاصة", face, face.Width / 2, face.Height / 2, 1000);
+                await Task.Delay(1000);
+            }
+
         }
 
         private async Task HandleWrongGuessAsync(PictureBox face)
@@ -148,7 +154,7 @@ namespace CoolItDown
 
             using (ToolTip tip = new())
             {
-                tip.Show("Ouch, wrong face!", face, face.Width / 2, face.Height / 2, 1000);
+                tip.Show("مصاصة", face, face.Width / 2, face.Height / 2, 1000);
                 await Task.Delay(1000);
             }
         }
@@ -230,7 +236,7 @@ namespace CoolItDown
         {
             try
             {
-                using var s = Properties.Resources.correct;
+                using var s = Properties.Resources.laugh;
                 if (s != null)
                 {
                     var player = new SoundPlayer(s);
@@ -260,10 +266,10 @@ namespace CoolItDown
             {
                 // No previous guess: provide a neutral hint - treat first click as "Hotter" (closer) only if within half diagonal distance
                 double maxPossible = Math.Sqrt(GamePanel.Width * GamePanel.Width + GamePanel.Height * GamePanel.Height);
-                return currentDistance <= (maxPossible / 2) ? "Hotter" : "Colder";
+                return currentDistance <= (maxPossible / 2) ? "قربت" : "بعدت";
             }
 
-            return currentDistance < previousDistance.Value ? "Hotter" : "Colder";
+            return currentDistance < previousDistance.Value ? "قربت" : "بعدت";
         }
 
         private async Task ShowBubbleAsync(PictureBox face, string text, int durationMs = 900)
@@ -281,7 +287,7 @@ namespace CoolItDown
             // If a speech-bubble image exists in resources use it
             try
             {
-                var bubbleImage = Properties.Resources.bubble;
+                var bubbleImage = Properties.Resources.bubbles;
                 if (bubbleImage != null)
                 {
                     bubble.BackgroundImage = bubbleImage;
@@ -297,7 +303,7 @@ namespace CoolItDown
             Label lbl = new Label
             {
                 Text = text,
-                ForeColor = Color.White,
+                ForeColor = Color.Black,
                 BackColor = Color.Transparent,
                 AutoSize = false,
                 TextAlign = ContentAlignment.MiddleCenter,

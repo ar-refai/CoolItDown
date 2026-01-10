@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <None Remove="Images\bubble.png" />
+    <None Remove="Images\bubbles.png" />
     <None Remove="Images\happy.png" />
     <None Remove="Images\sad1.png" />
     <None Remove="Images\sad10.png" />
@@ -32,10 +33,20 @@
     <None Remove="Images\sad8.png" />
     <None Remove="Images\sad9.png" />
     <None Remove="Sounds\correct.wav" />
+    <None Remove="Sounds\laugh.wav" />
     <None Remove="Sounds\wrong.wav" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Sounds\laugh.wav">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\bubbles.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Sounds\correct.wav">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
