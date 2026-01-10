@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Media;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -28,10 +29,6 @@ namespace CoolItDown
         public CoolItDownForm()
         {
             InitializeComponent();
-        }
-
-        private void HeaderPanel_Paint(object sender, PaintEventArgs e)
-        {
         }
 
         private void restartButton_Click(object sender, EventArgs e)
@@ -109,9 +106,9 @@ namespace CoolItDown
             {
                 PlayWrongSound();
                 // compute hotter/colder and show bubble
-                var currentDistance = DistanceBetweenCenters(clickedFace, correctFace);
-                string hint = ComputeHint(currentDistance);
-                previousDistance = currentDistance;
+                //var currentDistance = DistanceBetweenCenters(clickedFace, correctFace);
+                //string hint = ComputeHint(currentDistance);
+                //previousDistance = currentDistance;
                 //_ = ShowBubbleAsync(clickedFace, hint);
                 _ = HandleWrongGuessAsync(clickedFace);
             }
@@ -126,7 +123,8 @@ namespace CoolItDown
             using (ToolTip tip = new())
             {
                 tip.Show("أمك حلوة ورقاصة", face, face.Width / 2, face.Height / 2, 1000);
-                await Task.Delay(1000);
+                face.BackColor = Color.LightGreen;
+                await Task.Delay(500);
             }
 
         }
@@ -192,25 +190,25 @@ namespace CoolItDown
             ChooseCorrectFace();
         }
 
-        // Optional helper to briefly reveal the correct face (for testing/hint).
-        public async Task RevealCorrectFaceTemporary(int milliseconds = 800)
-        {
-            if (correctFace == null) return;
+        // Optional helper to briefly reveal the correct face (for testing).
+        //public async Task RevealCorrectFaceTemporary(int milliseconds = 800)
+        //{
+        //    if (correctFace == null) return;
 
-            var originalImage = correctFace.Image;
-            correctFace.Image = Properties.Resources.happy;
-            correctFace.BorderStyle = BorderStyle.FixedSingle;
-            correctFace.BackColor = Color.LightGreen;
+        //    var originalImage = correctFace.Image;
+        //    correctFace.Image = Properties.Resources.happy;
+        //    correctFace.BorderStyle = BorderStyle.FixedSingle;
+        //    correctFace.BackColor = Color.LightGreen;
 
-            await Task.Delay(milliseconds);
+        //    await Task.Delay(milliseconds);
 
-            if (currentState == GameState.Playing)
-            {
-                correctFace.Image = originalImage;
-                correctFace.BorderStyle = BorderStyle.None;
-                correctFace.BackColor = Color.Transparent;
-            }
-        }
+        //    if (currentState == GameState.Playing)
+        //    {
+        //        correctFace.Image = originalImage;
+        //        correctFace.BorderStyle = BorderStyle.None;
+        //        correctFace.BackColor = Color.Transparent;
+        //    }
+        //}
 
         // --- New helper methods for sound + hint bubble ---
 
@@ -249,94 +247,94 @@ namespace CoolItDown
             }
         }
 
-        private static double DistanceBetweenCenters(Control a, Control b)
-        {
-            var ax = a.Left + a.Width / 2.0;
-            var ay = a.Top + a.Height / 2.0;
-            var bx = b.Left + b.Width / 2.0;
-            var by = b.Top + b.Height / 2.0;
-            var dx = ax - bx;
-            var dy = ay - by;
-            return Math.Sqrt(dx * dx + dy * dy);
-        }
+        //private static double DistanceBetweenCenters(Control a, Control b)
+        //{
+        //    var ax = a.Left + a.Width / 2.0;
+        //    var ay = a.Top + a.Height / 2.0;
+        //    var bx = b.Left + b.Width / 2.0;
+        //    var by = b.Top + b.Height / 2.0;
+        //    var dx = ax - bx;
+        //    var dy = ay - by;
+        //    return Math.Sqrt(dx * dx + dy * dy);
+        //}
 
-        private string ComputeHint(double currentDistance)
-        {
-            if (!previousDistance.HasValue)
-            {
-                // No previous guess: provide a neutral hint - treat first click as "Hotter" (closer) only if within half diagonal distance
-                double maxPossible = Math.Sqrt(GamePanel.Width * GamePanel.Width + GamePanel.Height * GamePanel.Height);
-                return currentDistance <= (maxPossible / 2) ? "قربت" : "بعدت";
-            }
+        //private string ComputeHint(double currentDistance)
+        //{
+        //    if (!previousDistance.HasValue)
+        //    {
+        //        // No previous guess: provide a neutral hint - treat first click as "Hotter" (closer) only if within half diagonal distance
+        //        double maxPossible = Math.Sqrt(GamePanel.Width * GamePanel.Width + GamePanel.Height * GamePanel.Height);
+        //        return currentDistance <= (maxPossible / 2) ? "قربت" : "بعدت";
+        //    }
 
-            return currentDistance < previousDistance.Value ? "قربت" : "بعدت";
-        }
+        //    return currentDistance < previousDistance.Value ? "قربت" : "بعدت";
+        //}
 
-        private async Task ShowBubbleAsync(PictureBox face, string text, int durationMs = 900)
-        {
-            if (face == null) return;
+        //private async Task ShowBubbleAsync(PictureBox face, string text, int durationMs = 900)
+        //{
+        //    if (face == null) return;
 
-            // Prepare bubble panel (background image + label)
-            Panel bubble = new Panel
-            {
-                Size = new Size(120, 60),
-                BackgroundImageLayout = ImageLayout.Zoom,
-                BackColor = Color.Transparent
-            };
+        //    // Prepare bubble panel (background image + label)
+        //    Panel bubble = new Panel
+        //    {
+        //        Size = new Size(120, 60),
+        //        BackgroundImageLayout = ImageLayout.Zoom,
+        //        BackColor = Color.Transparent
+        //    };
 
-            // If a speech-bubble image exists in resources use it
-            try
-            {
-                var bubbleImage = Properties.Resources.bubbles;
-                if (bubbleImage != null)
-                {
-                    bubble.BackgroundImage = bubbleImage;
-                    // size to resource aspect ratio
-                    bubble.Size = new Size(Math.Min(140, bubbleImage.Width), Math.Min(80, bubbleImage.Height));
-                }
-            }
-            catch
-            {
-                // ignore if resource missing; panel will be plain
-            }
+        //    // If a speech-bubble image exists in resources use it
+        //    try
+        //    {
+        //        var bubbleImage = Properties.Resources.bubbles;
+        //        if (bubbleImage != null)
+        //        {
+        //            bubble.BackgroundImage = bubbleImage;
+        //            // size to resource aspect ratio
+        //            bubble.Size = new Size(Math.Min(140, bubbleImage.Width), Math.Min(80, bubbleImage.Height));
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        // ignore if resource missing; panel will be plain
+        //    }
 
-            Label lbl = new Label
-            {
-                Text = text,
-                ForeColor = Color.Black,
-                BackColor = Color.Transparent,
-                AutoSize = false,
-                TextAlign = ContentAlignment.MiddleCenter,
-                Dock = DockStyle.Fill,
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold)
-            };
+        //    Label lbl = new Label
+        //    {
+        //        Text = text,
+        //        ForeColor = Color.Black,
+        //        BackColor = Color.Transparent,
+        //        AutoSize = false,
+        //        TextAlign = ContentAlignment.MiddleCenter,
+        //        Dock = DockStyle.Fill,
+        //        Font = new Font("Segoe UI", 9F, FontStyle.Bold)
+        //    };
 
-            bubble.Controls.Add(lbl);
+        //    bubble.Controls.Add(lbl);
 
-            // Position bubble above the face, centered
-            int bubbleX = face.Left + (face.Width / 2) - (bubble.Width / 2);
-            int bubbleY = face.Top - bubble.Height - 8;
+        //    // Position bubble above the face, centered
+        //    int bubbleX = face.Left + (face.Width / 2) - (bubble.Width / 2);
+        //    int bubbleY = face.Top - bubble.Height - 8;
 
-            // Clamp within GamePanel
-            bubbleX = Math.Max(GamePanel.Padding.Left, bubbleX);
-            bubbleX = Math.Min(GamePanel.Width - bubble.Width - GamePanel.Padding.Right, bubbleX);
-            bubbleY = Math.Max(GamePanel.Padding.Top, bubbleY);
+        //    // Clamp within GamePanel
+        //    bubbleX = Math.Max(GamePanel.Padding.Left, bubbleX);
+        //    bubbleX = Math.Min(GamePanel.Width - bubble.Width - GamePanel.Padding.Right, bubbleX);
+        //    bubbleY = Math.Max(GamePanel.Padding.Top, bubbleY);
 
-            bubble.Left = bubbleX;
-            bubble.Top = bubbleY;
+        //    bubble.Left = bubbleX;
+        //    bubble.Top = bubbleY;
 
-            GamePanel.Controls.Add(bubble);
-            bubble.BringToFront();
+        //    GamePanel.Controls.Add(bubble);
+        //    bubble.BringToFront();
 
-            try
-            {
-                await Task.Delay(durationMs);
-            }
-            finally
-            {
-                GamePanel.Controls.Remove(bubble);
-                bubble.Dispose();
-            }
-        }
+        //    try
+        //    {
+        //        await Task.Delay(durationMs);
+        //    }
+        //    finally
+        //    {
+        //        GamePanel.Controls.Remove(bubble);
+        //        bubble.Dispose();
+        //    }
+        //}
     }
 }

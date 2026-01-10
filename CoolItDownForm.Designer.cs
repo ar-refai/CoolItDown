@@ -47,7 +47,6 @@
             HeaderPanel.Padding = new Padding(10);
             HeaderPanel.Size = new Size(884, 80);
             HeaderPanel.TabIndex = 0;
-            HeaderPanel.Paint += HeaderPanel_Paint;
             // 
             // label1
             // 
